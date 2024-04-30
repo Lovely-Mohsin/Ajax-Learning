@@ -10,7 +10,7 @@
 <body>
     <div class="container w-75 shadow mx-auto mt-5 p-5">
 
-        <h3 class=" p-1 mb-2">Add <span class="text-primary"> User</span> Information</h3>
+        <h3 class=" p-1 mb-2">Add <span class="text-success"> User</span> Information</h3>
         <hr>
 
         <!-- form to get data from user -->
@@ -27,14 +27,14 @@
 
             <div class="col-md-4 mt-3 mx-auto">
                 <label class="form-label"></label>
-                <input type="submit" id="send" class="btn btn-primary w-100" name="submit" value="Submit" />
+                <input type="submit" id="send" class="btn btn-success w-100" name="submit" value="Submit" />
             </div>
         </div>
 
         <!-- Show Data in table -->
         <div class="row my-3">
             <div class="col-md-12">
-                <h3 class=" p-1 mb-2">View All <span class="text-primary"> User</span></h3>
+                <h3 class=" p-1 mb-2">View All <span class="text-success"> User</span></h3>
                 <hr>
 
                 <table class="table table-striped table-hover">
@@ -49,15 +49,30 @@
                     </thead>
 
                     <tbody>
+                        <?php
+                        include("./config.php");
+                        $sel_qry = "SELECT * FROM users";
+                        $result = mysqli_query($db_con , $sel_qry);
+                        if(mysqli_num_rows($result) > 0){
+                            while($row = mysqli_fetch_assoc($result)){
+                                $id = $row['id'];
+                                $fname = $row['fname'];
+                                $lname = $row['lname'];
+                         
+                        ?>
                         <tr>
-                            <th>1</th>
-                            <td>Ali</td>
-                            <td>Raza</td>
+                            <th><?php echo $id ?></th>
+                            <td><?php echo $fname ?></td>
+                            <td><?php echo $lname ?></td>
                             <td><a href="" class="btn btn-warning btn-sm">Edit</a>
                                 |
                                 <a href="" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
+                    <?php
+                    }
+                        }
+                    ?>
                     </tbody>
                 </table>
             </div>
