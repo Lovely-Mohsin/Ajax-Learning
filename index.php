@@ -49,10 +49,11 @@
     <script src="./jquery/jquery-3.7.1.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+
+                $(document).ready(function() {
 
             // insert data function 
-            function btn.click() {
+            function loadData() {
                 // send data on insert qry page
                 $.ajax({
                     url: "./show-data-query.php",
@@ -62,6 +63,7 @@
                     },
                     success: function(response) {
                         $('#table-data').html(response)
+                        loadData();
 
                     }
                 })
@@ -72,7 +74,6 @@
             loadData();
 
         })
-
 
         $(document).ready(function() {
 
@@ -95,6 +96,7 @@ btn.click(function() {
             alert(response);
             $("#fname").val("");
             $("#lname").val("");
+            loadData();
         }
     })
 
@@ -103,6 +105,7 @@ btn.click(function() {
 
 })
     
+
     </script>
 
 </body>
