@@ -36,45 +36,9 @@
             <div class="col-md-12">
                 <h3 class=" p-1 mb-2">View All <span class="text-success"> User</span></h3>
                 <hr>
+            </div>
+            <div class="col-md-12" id="table-data">
 
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First Name</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">Actions</th>
-
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <?php
-                        include("./config.php");
-                        $sel_qry = "SELECT * FROM users";
-                        $result = mysqli_query($db_con , $sel_qry);
-                        if(mysqli_num_rows($result) > 0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                $id = $row['id'];
-                                $fname = $row['fname'];
-                                $lname = $row['lname'];
-                         
-                        ?>
-                        <tr>
-                            <th><?php echo $id ?></th>
-                            <td><?php echo $fname ?></td>
-                            <td><?php echo $lname ?></td>
-                            <td><a href="" class="btn btn-warning btn-sm">Edit</a>
-                                |
-                                <a href="" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
-                        </tr>
-                    <?php
-                    }
-                        }
-                    ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -87,32 +51,58 @@
     <script>
         $(document).ready(function() {
 
-            var btn = $("#send");
-
             // insert data function 
-            btn.click(function() {
-                var fname = $("#fname").val();
-                var lname = $("#lname").val();
-
+            function btn.click() {
                 // send data on insert qry page
                 $.ajax({
-                    url: "./insert-qry.php",
-                    type: "POST",
+                    url: "./show-data-query.php",
+                    type: "GET",
                     data: {
-                        firstName: fname,
-                        lastName: lname
+
                     },
                     success: function(response) {
-                        alert(response);
-                        $("#fname").val("");
-                        $("#lname").val("");
+                        $('#table-data').html(response)
+
                     }
                 })
 
 
-            })
+            }
+
+            loadData();
 
         })
+
+
+        $(document).ready(function() {
+
+var btn = $("#send");
+
+// insert data function 
+btn.click(function() {
+    var fname = $("#fname").val();
+    var lname = $("#lname").val();
+
+    // send data on insert qry page
+    $.ajax({
+        url: "./insert-qry.php",
+        type: "POST",
+        data: {
+            firstName: fname,
+            lastName: lname
+        },
+        success: function(response) {
+            alert(response);
+            $("#fname").val("");
+            $("#lname").val("");
+        }
+    })
+
+
+})
+
+})
+    
     </script>
 
 </body>
