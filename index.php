@@ -57,11 +57,11 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="fname" placeholder="Enter Here" required autocomplete="off">
+                            <input type="text" class="form-control" id="editfname" placeholder="Enter Here" required autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lname" placeholder="Enter Here" required autocomplete="off">
+                            <input type="text" class="form-control" id="editlname" placeholder="Enter Here" required autocomplete="off">
                         </div>
                         <div class="alert alert-success" style="display: none" ; id="messages"></div>
                     </div>
@@ -74,11 +74,6 @@
         </div>
     </div>
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
-        Launch demo modal
-    </button>
-
 
     <!-- js links -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -88,108 +83,103 @@
     <script>
         $(document).ready(function() {
 
-            // insert data function 
-            function loadData() {
-                // send data on insert qry page
-                $.ajax({
-                    url: "./show-data-query.php",
-                    type: "GET",
-                    data: {
+                // insert data function 
+                function loadData() {
+                    // send data on insert qry page
+                    $.ajax({
+                        url: "./show-data-query.php",
+                        type: "GET",
+                        data: {
 
-                    },
-                    success: function(response) {
-                        $('#table-data').html(response)
-                    }
-                })
-
-
-            }
-
-            loadData();
-
-            var btn = $("#send");
-
-            // insert data function 
-            btn.click(function() {
-                var fname = $("#fname").val();
-                var lname = $("#lname").val();
-
-                // send data on insert qry page
-                $.ajax({
-                    url: "./insert-qry.php",
-                    type: "POST",
-                    data: {
-                        firstName: fname,
-                        lastName: lname
-                    },
-                    success: function(response) {
-                        alert(response);
-                        $("#fname").val("");
-                        $("#lname").val("");
-                        loadData();
-                    }
-                })
-            })
+                        },
+                        success: function(response) {
+                            $('#table-data').html(response)
+                        }
+                    })
 
 
-            // edit data function 
-            $(document).on("click", '.editBtn', function() {
-                let id = $(this).data('id');
-                if(!empty(id)){
-                    alert (id);
                 }
-                else{
-                    alert('Something went wrong')
-                }
-            })
+
+                    loadData();
+
+                    var btn = $("#send");
+
+                    // insert data function 
+                    btn.click(function() {
+                        var fname = $("#fname").val();
+                        var lname = $("#lname").val();
+
+                        // send data on insert qry page
+                        $.ajax({
+                            url: "./insert-qry.php",
+                            type: "POST",
+                            data: {
+                                firstName: fname,
+                                lastName: lname
+                            },
+                            success: function(response) {
+                                alert(response);
+                                $("#fname").val("");
+                                $("#lname").val("");
+                                loadData();
+                            }
+                        })
+                    })
 
 
+                    // edit data function 
+                    $(document).on("click", '.editBtn', function() {
+                        let id = $(this).data('id');
+                        $.ajax({
+                            url: "./edit.php",
+                            type: "GET",
+                            data: {
+                                id: id
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                let data = JSON.parse(response);
+                                $("#editfname").val(data.fname);
+                                $("#editlname").val(data.lname);
+                                $("#item_id").val(data.id);
+                                $("#modal").modal("show");
 
-            // $(document).on("click", '.editBtn', function(){
+                                }
+                            })
 
-            //     let id = $(this).data("id");
+                        })
 
-            //     $.ajax({
-            //         url: "./edit.php",
-            //         type: "GET",
-            //         data: {
-            //             id: id
-            //         },
-            //         success: function(response) {
-            //               console.log(response);
-            //             let data = JSON.parse(response);
-            //            $("#fname").val(data.fname);
-            //            $("#lname").val(data.lname);
-            //            $("#item_id").val(data.id);
-            //             $("#modal").modal("show");
-            //              console.log(data.id)
-            //         }
-            //     })
+                        //update item
+                        $("#updateBtn").on("click",  function(e) {
+                            e.preventDefault();
+                            $.ajax({
+                                url: "./update.php",
+                                type: "POST",
+                                data: {
+                                    fname: $("#editfname").val(),
+                                    lname: $("#editlname").val(),
+                                    id: $("#item_id").val()
+                                },
+                                success: function(res) {
+
+                                    $("#messages").html(res).show();
+                                    setTimeout(() => {
+                                        $("#messages").hide();
+                                        $("#modal").modal("hide");
+                                    }, 2000)
+                                    loadData();
+                                }
+                            })
+                        })
+
+
+            // hide modal event
+            // const myModalEl = document.getElementById('#modal')
+            // myModalEl.addEventListener('hidden.bs.modal', event => {
+            //     loadData();
             // })
 
-
-            //update item
-            // $("#updateBtn").on("click",  function(update) {
-            //     update.preventDefault();
-            //     $.ajax({
-            //         url: "./update.php",
-            //         type: "POST",
-            //         data: {
-            //             fname: $("#fname").val(),
-            //             lname: $("#lname").val(),
-            //             id: $("#item_id").val()
-            //         },
-            //         success: function(res) {
-            //             $("#messages").html(res).show();
-            //             setTimeout(() => {
-            //                 $("#messages").hide();
-            //                 $("#Modal").modal("hide");
-            //             }, 2000)
-            //         }
-            //     })
-            // })
-
-        })
+         })
     </script>
 
 </body>
