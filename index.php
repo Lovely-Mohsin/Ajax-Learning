@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Insert Query</title>
+    <title>AJAX CRUD</title>
     <!-- bootstrp links -->
     <link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
 </head>
@@ -43,14 +43,50 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST">
+                    <input type="hidden" id="item_id" value="" />
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="fname" placeholder="Enter Here" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lname" placeholder="Enter Here" required autocomplete="off">
+                        </div>
+                        <div class="alert alert-success" style="display: none" ; id="messages"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="updateBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
+        Launch demo modal
+    </button>
+
 
     <!-- js links -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="./Bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./jquery/jquery-3.7.1.min.js"></script>
 
     <script>
-
-                $(document).ready(function() {
+        $(document).ready(function() {
 
             // insert data function 
             function loadData() {
@@ -63,8 +99,6 @@
                     },
                     success: function(response) {
                         $('#table-data').html(response)
-                        loadData();
-
                     }
                 })
 
@@ -73,39 +107,89 @@
 
             loadData();
 
+            var btn = $("#send");
+
+            // insert data function 
+            btn.click(function() {
+                var fname = $("#fname").val();
+                var lname = $("#lname").val();
+
+                // send data on insert qry page
+                $.ajax({
+                    url: "./insert-qry.php",
+                    type: "POST",
+                    data: {
+                        firstName: fname,
+                        lastName: lname
+                    },
+                    success: function(response) {
+                        alert(response);
+                        $("#fname").val("");
+                        $("#lname").val("");
+                        loadData();
+                    }
+                })
+            })
+
+
+            // edit data function 
+            $(document).on("click", '.editBtn', function() {
+                let id = $(this).data('id');
+                if(!empty(id)){
+                    alert (id);
+                }
+                else{
+                    alert('Something went wrong')
+                }
+            })
+
+
+
+            // $(document).on("click", '.editBtn', function(){
+
+            //     let id = $(this).data("id");
+
+            //     $.ajax({
+            //         url: "./edit.php",
+            //         type: "GET",
+            //         data: {
+            //             id: id
+            //         },
+            //         success: function(response) {
+            //               console.log(response);
+            //             let data = JSON.parse(response);
+            //            $("#fname").val(data.fname);
+            //            $("#lname").val(data.lname);
+            //            $("#item_id").val(data.id);
+            //             $("#modal").modal("show");
+            //              console.log(data.id)
+            //         }
+            //     })
+            // })
+
+
+            //update item
+            // $("#updateBtn").on("click",  function(update) {
+            //     update.preventDefault();
+            //     $.ajax({
+            //         url: "./update.php",
+            //         type: "POST",
+            //         data: {
+            //             fname: $("#fname").val(),
+            //             lname: $("#lname").val(),
+            //             id: $("#item_id").val()
+            //         },
+            //         success: function(res) {
+            //             $("#messages").html(res).show();
+            //             setTimeout(() => {
+            //                 $("#messages").hide();
+            //                 $("#Modal").modal("hide");
+            //             }, 2000)
+            //         }
+            //     })
+            // })
+
         })
-
-        $(document).ready(function() {
-
-var btn = $("#send");
-
-// insert data function 
-btn.click(function() {
-    var fname = $("#fname").val();
-    var lname = $("#lname").val();
-
-    // send data on insert qry page
-    $.ajax({
-        url: "./insert-qry.php",
-        type: "POST",
-        data: {
-            firstName: fname,
-            lastName: lname
-        },
-        success: function(response) {
-            alert(response);
-            $("#fname").val("");
-            $("#lname").val("");
-            loadData();
-        }
-    })
-
-
-})
-
-})
-    
-
     </script>
 
 </body>

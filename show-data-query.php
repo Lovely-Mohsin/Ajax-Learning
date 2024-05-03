@@ -25,7 +25,7 @@ $html .= "<tr>";
 $html .= "<td>$row[id]</td>";
 $html .= "<td>$row[fname]</td>";
 $html .= "<td>$row[lname]</td>";
-$html .= "<td><button class='btn btn-warning btn-sm me-2'>Edit</button><button class='btn btn-danger btn-sm'>Delete</button></td>";
+$html .= "<td><button class='btn btn-success btn-sm me-2 editBtn' data-id = '$row[id]'>Edit</button>   <button class='btn btn-danger btn-sm'>Delete</button></td>";
 $html .= "</tr>";
 }
 $html .= "</tbody></table>";
